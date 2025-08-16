@@ -4,29 +4,32 @@ console.log('Content script loaded on:', window.location.href);
 // グローバルに公開する関数
 window.getOverviewText = function() {
   try {
-    console.log('Looking for elements...');
-    const overviewElement = document.querySelector('.c-heading_overview');
-    const contentElement = document.querySelector('.c-contentsFreeText_text');
+    const result = [];
     
-    let result = [];
+    // タイトルを取得
+    const titleElement = document.querySelector('.c-overview_overview');
+    const overviewElement = document.querySelector('.c-overview_text');
+    
+    // タイトルを取得
+    if (titleElement) {
+      result.push({
+        title: 'サービスタイトル',
+        content: titleElement.textContent.trim(),
+        type: 'title'
+      });
+    } else {
+      console.log('No element with class .c-overview_overview found');
+    }
     
     // 概要テキストを取得
     if (overviewElement) {
       result.push({
-        title: 'サービスタイトル',
-        content: overviewElement.textContent.trim()
+        title: 'タイトル補足説明',
+        content: overviewElement.textContent.trim(),
+        type: 'overview'
       });
     } else {
-      console.warn('No element with class .c-heading_overview found');
-      // 代替セレクタを試す
-      const alternativeElement = document.querySelector('.service-detail__overview, .service-overview');
-      if (alternativeElement) {
-        console.log('Found alternative overview element:', alternativeElement);
-        result.push({
-          title: 'サービスタイトル',
-          content: alternativeElement.textContent.trim()
-        });
-      }
+      console.log('No element with class .c-overview_text found');
     }
     
     // コンテンツテキストを取得（複数ある可能性があるためquerySelectorAllを使用）
@@ -44,12 +47,35 @@ window.getOverviewText = function() {
             
           result.push({
             title: title,
-            content: content
+            content: content,
+            type: 'content'
           });
         }
       });
     } else {
       console.warn('No elements with class .c-contentsFreeText_text found');
+    }
+    
+    // サービスオプションを取得
+    const optionElements = document.querySelectorAll('.c-serviceOptionItem_name');
+    
+    if (optionElements.length > 0) {
+      optionElements.forEach((element, index) => {
+        const content = element.textContent.trim();
+        if (content) {
+          const title = optionElements.length > 1
+            ? `オプション ${index + 1}`
+            : 'サービスオプション';
+            
+          result.push({
+            title: title,
+            content: content,
+            type: 'option'
+          });
+        }
+      });
+    } else {
+      console.log('No elements with class .c-serviceOptionItem_name found');
     }
     
     // 結果が空の場合はメッセージを返す

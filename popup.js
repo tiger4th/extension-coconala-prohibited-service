@@ -79,6 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
             response.result.forEach(item => {
               const section = document.createElement('div');
               section.className = 'result-section';
+              // タイプに応じたスタイルを適用するため、data-type属性を追加
+              section.setAttribute('data-type', item.type || 'default');
               section.innerHTML = `
                 <h3>${item.title}</h3>
                 <div class="result-content">${item.content || '内容がありません'}</div>

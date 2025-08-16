@@ -56,6 +56,31 @@ button:hover {
   padding: 12px;
 }
 
+/* タイトルセクションのスタイル */
+.result-section[data-type="title"] {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+  font-weight: bold;
+}
+
+/* 概要セクションのスタイル */
+.result-section[data-type="overview"] {
+  background-color: #f9f9f9;
+  border-left: 4px solid #9e9e9e;
+}
+
+/* サービス内容セクションのスタイル */
+.result-section[data-type="content"] {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+/* オプションセクションのスタイル */
+.result-section[data-type="option"] {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
 .result-section:last-child {
   margin-bottom: 0;
 }
