@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
           loadingDiv.className = 'loading-container';
           loadingDiv.innerHTML = `
             <div class="loading-spinner"></div>
-            <p>AIによる分析を実行中です...</p>
+            <p>AIによる分析中です...</p>
           `;
           resultsContainer.appendChild(loadingDiv);
           
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showError(`エラーが発生しました: ${error.message}\nページをリロードしてみてください`);
       }
     } else {
-      showError('ココナラのサービスページを表示してください');
+      showError('ココナラのサービスページまたはサービスの出品・編集ページを表示してから実行してください。');
     }
   });
 
