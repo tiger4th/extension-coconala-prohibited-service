@@ -124,9 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 resultsContainer.appendChild(errorSection);
               }
               
-              // Insert after the URL status
-              if (urlStatusDiv && resultsContainer) {
-                urlStatusDiv.after(resultsContainer);
+              // 結果を表示
+              if (resultsContainer) {
+                const container = document.querySelector('.container');
+                if (container) {
+                  container.appendChild(resultsContainer);
+                } else {
+                  document.body.appendChild(resultsContainer);
+                }
               }
             });
           });

@@ -19,6 +19,11 @@ window.getOverviewText = async function() {
       });
     } else {
       console.log('No element with class .c-overview_overview found');
+      result.push({
+        title: 'サービスタイトル',
+        content: 'サービスタイトルは取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+        type: 'error'
+      });
     }
     
     // 概要テキストを取得
@@ -30,6 +35,11 @@ window.getOverviewText = async function() {
       });
     } else {
       console.log('No element with class .c-overview_text found');
+      result.push({
+        title: 'タイトル補足説明',
+        content: 'タイトル補足説明は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+        type: 'error'
+      });
     }
     
     // コンテンツテキストを取得（複数ある可能性があるためquerySelectorAllを使用）
@@ -57,9 +67,14 @@ window.getOverviewText = async function() {
       });
     } else {
       console.warn('No elements with class .c-contentsFreeText_text found');
+      result.push({
+        title: 'サービス内容',
+        content: 'サービス内容は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+        type: 'error'
+      });
     }
     
-    // サービスオプションを取得
+    // オプションを取得
     const optionElements = document.querySelectorAll('.c-serviceOptionItem_name');
     
     if (optionElements.length > 0) {
@@ -68,7 +83,7 @@ window.getOverviewText = async function() {
         if (content) {
           const title = optionElements.length > 1
             ? `オプション ${index + 1}`
-            : 'サービスオプション';
+            : 'オプション';
             
           result.push({
             title: title,
@@ -79,6 +94,12 @@ window.getOverviewText = async function() {
       });
     } else {
       console.log('No elements with class .c-serviceOptionItem_name found');
+      // オプションは必須ではないので、エラーではなく情報として表示
+      result.push({
+        title: 'オプション',
+        content: 'オプションはありません。',
+        type: 'info'
+      });
     }
     
     // 結果が空の場合はメッセージを返す
@@ -119,7 +140,7 @@ window.getOverviewText = async function() {
       console.error('API request failed:', error);
       result.unshift({
         title: 'AI判定エラー',
-        content: '判定中にエラーが発生しました。後でもう一度お試しください。',
+        content: '判定中にエラーが発生しました。後でもう一度お試しください。アクセス集中の場合、しばらくご利用いただけない場合があります。',
         type: 'error'
       });
     }
