@@ -3,7 +3,8 @@
   "name": "My Chrome Extension",
   "version": "1.0",
   "description": "A simple Chrome extension",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["https://coconala.com/*"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -14,8 +15,10 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "matches": ["https://coconala.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
   "background": {
