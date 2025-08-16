@@ -2,7 +2,7 @@
 console.log('Content script loaded on:', window.location.href);
 
 // グローバルに公開する関数
-window.getOverviewText = function() {
+window.getOverviewText = async function() {
   try {
     const result = [];
     
@@ -83,6 +83,44 @@ window.getOverviewText = function() {
       return 'タイトルとサービス内容が見つかりませんでした';
     }
     
+    // すべてのテキストを結合
+    let combinedText = '';
+    result.forEach(item => {
+      if (item.content) {
+        combinedText += `${item.title}\n${item.content}\n\n`;
+      }
+    });
+    
+    // 結合したテキストを追加
+    result.push({
+      title: 'すべてのテキスト',
+      content: combinedText.trim(),
+      type: 'combined'
+    });
+    
+    // APIにリクエストを送信
+    try {
+      const apiUrl = `https://tiger4th.com/api/extension-coconala-prohibited-service/?content=${encodeURIComponent(combinedText)}`;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      
+      if (data.status === 'success' && data.response) {
+        // APIのレスポンスを先頭に追加
+        result.unshift({
+          title: 'AI判定結果',
+          content: data.response,
+          type: 'ai-analysis'
+        });
+      }
+    } catch (error) {
+      console.error('API request failed:', error);
+      result.unshift({
+        title: 'AI判定エラー',
+        content: '判定中にエラーが発生しました。後でもう一度お試しください。',
+        type: 'error'
+      });
+    }
+    
     return result;
   } catch (error) {
     console.error('Error in getOverviewText:', error);
@@ -91,43 +129,42 @@ window.getOverviewText = function() {
 }
 
 // ポップアップからのメッセージをリッスン
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Message received in content script:', request);
-  
+
   if (request.action === 'getOverview') {
     console.log('getOverview request received');
-    try {
-      const result = window.getOverviewText ? window.getOverviewText() : 'getOverviewText関数が見つかりません';
-      console.log('Sending result:', result);
-      
-      // 結果が配列の場合はそのまま、それ以外はエラーとして扱う
-      const isSuccess = Array.isArray(result);
-      
-      sendResponse({ 
-        success: isSuccess,
-        result: isSuccess ? result : [],
-        error: isSuccess ? null : result,
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Error in message handler:', error);
-      sendResponse({ 
-        success: false,
-        error: error.message,
-        timestamp: new Date().toISOString()
-      });
-    }
-    return true; // 非同期レスポンスのために必要
+    
+    // 非同期で処理を実行
+    (async () => {
+      try {
+        const result = await getOverviewText();
+        console.log('Sending response:', result);
+        sendResponse({ 
+          success: true, 
+          result: result,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error('Error in getOverview:', error);
+        sendResponse({ 
+          success: false, 
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    })();
+    
+    // 非同期レスポンスを有効にする
+    return true;
   }
   
   if (request.action === 'toggle') {
-    if (request.isActive) {
-      console.log('Extension activated');
-    } else {
-      console.log('Extension deactivated');
-    }
+    console.log(`Extension ${request.isActive ? 'activated' : 'deactivated'}`);
+    return true;
   }
-  return true;
+  
+  return false;
 });
 
 console.log('Content script initialization complete');
