@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isCoconalaService = url.startsWith('https://coconala.com/services/');
     
     if (isCoconalaService) {
-      urlStatusDiv.textContent = 'Coconalaサービスページを表示中です';
+      urlStatusDiv.textContent = 'ココナラサービスページを表示中です';
       urlStatusDiv.style.color = '#4CAF50';
       
       // コンテンツスクリプトが読み込まれているか確認
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showError(`エラーが発生しました: ${error.message}\nページをリロードしてみてください`);
       }
     } else {
-      urlStatusDiv.textContent = 'Coconalaサービスページではありません';
+      urlStatusDiv.textContent = 'ココナラサービスページではありません';
       urlStatusDiv.style.color = '#f44336';
     }
   });
