@@ -54,60 +54,91 @@ document.addEventListener('DOMContentLoaded', function() {
           
           console.log('Content script check result:', results);
           
-          // コンテンツスクリプトにメッセージを送信
-          console.log('Sending message to content script...');
-          chrome.tabs.sendMessage(tabs[0].id, {action: 'getOverview'}, function(response) {
-            console.log('Response from content script:', response);
+          // 結果表示エリアをクリア
+          const resultsContainer = document.getElementById('results');
+          resultsContainer.innerHTML = '';
+          
+          // ローディング表示を追加
+          const loadingDiv = document.createElement('div');
+          loadingDiv.className = 'loading-container';
+          loadingDiv.innerHTML = `
+            <div class="loading-spinner"></div>
+            <p>AIによる分析を実行中です...</p>
+          `;
+          resultsContainer.appendChild(loadingDiv);
+          
+          // アクティブなタブを取得
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const tab = tabs[0];
             
-            if (chrome.runtime.lastError) {
-              console.error('Error in sendMessage:', chrome.runtime.lastError);
-              showError(`コンテンツスクリプトとの通信エラー: ${chrome.runtime.lastError.message}\n1. ページをリロードしてください\n2. それでもダメな場合は、拡張機能を再読み込みしてください`);
+            if (!tab) {
+              console.error('No active tab found');
+              displayError('アクティブなタブが見つかりません');
               return;
             }
             
-            if (!response) {
-              console.error('No response from content script');
-              showError('コンテンツスクリプトからの応答がありません\nページをリロードしてみてください');
-              return;
-            }
-          
-          // Create a container for the results
-          const resultsContainer = document.createElement('div');
-          resultsContainer.className = 'results-container';
-          
-          if (response.success && Array.isArray(response.result) && response.result.length > 0) {
-            response.result.forEach(item => {
-              const section = document.createElement('div');
-              section.className = 'result-section';
-              // タイプに応じたスタイルを適用するため、data-type属性を追加
-              section.setAttribute('data-type', item.type || 'default');
-              section.innerHTML = `
-                <h3>${item.title}</h3>
-                <div class="result-content">${item.content || '内容がありません'}</div>
-              `;
-              resultsContainer.appendChild(section);
+            console.log('Sending message to tab:', tab.id);
+            
+            // コンテンツスクリプトにメッセージを送信
+            chrome.tabs.sendMessage(tab.id, { action: 'getOverview' }, (response) => {
+              // メッセージ送信エラーチェック
+              if (chrome.runtime.lastError) {
+                console.error('メッセージ送信エラー:', chrome.runtime.lastError);
+                showError('メッセージの送信中にエラーが発生しました: ' + chrome.runtime.lastError.message);
+                return;
+              }
               
-              // Add a separator between sections
-              if (item !== response.result[response.result.length - 1]) {
-                const separator = document.createElement('div');
-                separator.className = 'separator';
-                resultsContainer.appendChild(separator);
+              console.log('コンテンツスクリプトからのレスポンス:', response);
+              
+              // ローディング表示を削除
+              const loadingElement = document.querySelector('.loading-container');
+              if (loadingElement) {
+                loadingElement.remove();
+              }
+              
+              if (!response) {
+                showError('コンテンツスクリプトからの応答がありません');
+                return;
+              }
+              
+              if (response.success && Array.isArray(response.result)) {
+                response.result.forEach((item, index) => {
+                  if (!item || !item.title) return;
+                  
+                  const section = document.createElement('div');
+                  section.className = 'result-section';
+                  section.setAttribute('data-type', item.type || 'default');
+                  section.innerHTML = `
+                    <h3>${item.title}</h3>
+                    <div class="result-content">${item.content || '内容がありません'}</div>
+                  `;
+                  resultsContainer.appendChild(section);
+                  
+                  // 最後の要素以外に区切り線を追加
+                  if (index < response.result.length - 1) {
+                    const separator = document.createElement('div');
+                    separator.className = 'separator';
+                    resultsContainer.appendChild(separator);
+                  }
+                });
+              } else {
+                // エラーケースの処理
+                const errorSection = document.createElement('div');
+                errorSection.className = 'error-section';
+                errorSection.textContent = response ? (response.error || '情報を取得できませんでした') : 'サーバーからの応答がありません';
+                resultsContainer.appendChild(errorSection);
+              }
+              
+              // Insert after the URL status
+              if (urlStatusDiv && resultsContainer) {
+                urlStatusDiv.after(resultsContainer);
               }
             });
-          } else {
-            // Fallback for error cases
-            const errorSection = document.createElement('div');
-            errorSection.className = 'error-section';
-            errorSection.textContent = response.error || '情報を取得できませんでした';
-            resultsContainer.appendChild(errorSection);
-          }
-          
-          // Insert after the URL status
-          urlStatusDiv.after(resultsContainer);
           });
         });
       } catch (error) {
         console.error('Error in content script check:', error);
+        displayError('エラーが発生しました: ' + error.message);
         showError(`エラーが発生しました: ${error.message}\nページをリロードしてみてください`);
       }
     } else {

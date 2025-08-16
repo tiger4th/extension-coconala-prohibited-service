@@ -130,28 +130,34 @@ window.getOverviewText = async function() {
 
 // ポップアップからのメッセージをリッスン
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Message received in content script:', request);
+  console.log('コンテンツスクリプトでメッセージを受信:', request);
 
   if (request.action === 'getOverview') {
-    console.log('getOverview request received');
+    console.log('getOverviewリクエストを受信');
     
-    // 非同期で処理を実行
+    // 非同期処理を実行
     (async () => {
       try {
         const result = await getOverviewText();
-        console.log('Sending response:', result);
-        sendResponse({ 
-          success: true, 
-          result: result,
-          timestamp: new Date().toISOString()
-        });
+        console.log('レスポンスを送信:', result);
+        
+        // 結果を直接返す
+        if (typeof sendResponse === 'function') {
+          sendResponse({ 
+            success: true, 
+            result: result,
+            timestamp: new Date().toISOString()
+          });
+        }
       } catch (error) {
-        console.error('Error in getOverview:', error);
-        sendResponse({ 
-          success: false, 
-          error: error.message,
-          timestamp: new Date().toISOString()
-        });
+        console.error('getOverviewでエラー:', error);
+        if (typeof sendResponse === 'function') {
+          sendResponse({ 
+            success: false, 
+            error: error.message,
+            timestamp: new Date().toISOString()
+          });
+        }
       }
     })();
     
@@ -160,7 +166,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   
   if (request.action === 'toggle') {
-    console.log(`Extension ${request.isActive ? 'activated' : 'deactivated'}`);
+    console.log(`拡張機能が${request.isActive ? '有効化' : '無効化'}されました`);
     return true;
   }
   
