@@ -103,6 +103,21 @@ document.addEventListener('DOMContentLoaded', function() {
                   const section = document.createElement('div');
                   section.className = 'result-section';
                   section.setAttribute('data-type', item.type || 'default');
+                  
+                  // Check for AI judgment result and apply appropriate background color
+                  if (item.title === 'AI判定結果' && item.content) {
+                    if (item.content.includes('禁止事項に該当する')) {
+                      section.style.backgroundColor = '#ffebee'; // Light red
+                      section.style.borderLeft = '4px solid #f44336'; // Red border
+                    } else if (item.content.includes('禁止事項に該当しない')) {
+                      section.style.backgroundColor = '#e3f2fd'; // Light blue
+                      section.style.borderLeft = '4px solid #2196f3'; // Blue border
+                    }
+                    section.style.padding = '10px';
+                    section.style.marginBottom = '10px';
+                    section.style.borderRadius = '4px';
+                  }
+                  
                   section.innerHTML = `
                     <h3>${item.title}</h3>
                     <div class="result-content">${item.content || '内容がありません'}</div>
