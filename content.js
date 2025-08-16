@@ -40,10 +40,13 @@ window.getOverviewText = async function() {
       contentElements.forEach((element, index) => {
         const content = element.textContent.trim();
         if (content) {
-          // 複数ある場合は番号を付与
-          const title = contentElements.length > 1 
-            ? `サービス内容 ${index + 1}` 
-            : 'サービス内容';
+          // 最初の要素は「サービス内容」、2つ目は「購入にあたってのお願い」、他は番号付き
+          let title = 'サービス内容';
+          if (contentElements.length > 1) {
+            title = index === 0 ? 'サービス内容' : 
+                   index === 1 ? '購入にあたってのお願い' : 
+                   `サービス内容 ${index + 1}`;
+          }
             
           result.push({
             title: title,
@@ -128,7 +131,7 @@ window.getOverviewText = async function() {
   }
 }
 
-// ポップアップからのメッセージをリッスン
+// メッセージリスナー
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('コンテンツスクリプトでメッセージを受信:', request);
 
@@ -141,11 +144,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const result = await getOverviewText();
         console.log('レスポンスを送信:', result);
         
-        // 結果を直接返す
+        // 結果を返す（'すべてのテキスト'は除外）
         if (typeof sendResponse === 'function') {
+          const filteredResult = Array.isArray(result) 
+            ? result.filter(item => item.title !== 'すべてのテキスト')
+            : [{
+                title: '結果',
+                content: result,
+                type: 'default'
+              }];
+          
           sendResponse({ 
             success: true, 
-            result: result,
+            result: filteredResult,
             timestamp: new Date().toISOString()
           });
         }

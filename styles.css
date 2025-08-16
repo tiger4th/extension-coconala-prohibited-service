@@ -139,8 +139,6 @@ button:hover {
   font-size: 13px;
   line-height: 1.6;
   color: #444;
-  max-height: 200px;
-  overflow-y: auto;
   word-break: break-word;
   white-space: pre-wrap;
 }

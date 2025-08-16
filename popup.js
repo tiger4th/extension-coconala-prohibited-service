@@ -79,12 +79,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('Sending message to tab:', tab.id);
             
-            // コンテンツスクリプトにメッセージを送信
-            chrome.tabs.sendMessage(tab.id, { action: 'getOverview' }, (response) => {
-              // メッセージ送信エラーチェック
+            // ポップアップが閉じられても処理を続行できるようにbackground.jsに処理を移譲
+            chrome.runtime.sendMessage({
+              action: 'getOverview',
+              tabId: tab.id
+            }, (response) => {
+              // 接続エラーの場合
               if (chrome.runtime.lastError) {
                 console.error('メッセージ送信エラー:', chrome.runtime.lastError);
-                showError('メッセージの送信中にエラーが発生しました: ' + chrome.runtime.lastError.message);
+                showError('データの取得中にエラーが発生しました。ページをリロードしてもう一度お試しください。');
                 return;
               }
               
