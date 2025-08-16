@@ -176,10 +176,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   
-  if (request.action === 'toggle') {
-    console.log(`拡張機能が${request.isActive ? '有効化' : '無効化'}されました`);
-    return true;
-  }
   
   return false;
 });
