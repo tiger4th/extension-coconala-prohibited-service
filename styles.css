@@ -28,15 +28,6 @@ button:hover {
   background-color: #45a049;
 }
 
-.url-status {
-  margin: 10px 0;
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #f8f8f8;
-}
-
 .separator {
   height: 1px;
   background-color: #e0e0e0;

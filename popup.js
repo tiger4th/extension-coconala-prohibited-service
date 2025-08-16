@@ -13,14 +13,11 @@ function showError(message) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  const urlStatusDiv = document.getElementById('urlStatus');
-  
   // Check if current URL is a Coconala service page
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       console.error('No active tab found');
-      urlStatusDiv.textContent = 'アクティブなタブが見つかりません';
-      urlStatusDiv.style.color = '#f44336';
+      showError('アクティブなタブが見つかりません');
       return;
     }
 
@@ -30,9 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const isCoconalaService = url.startsWith('https://coconala.com/services/');
     
     if (isCoconalaService) {
-      urlStatusDiv.textContent = 'ココナラサービスページを表示中です';
-      urlStatusDiv.style.color = '#4CAF50';
-      
       // コンテンツスクリプトが読み込まれているか確認
       console.log('Injecting content script...');
       try {
@@ -143,8 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showError(`エラーが発生しました: ${error.message}\nページをリロードしてみてください`);
       }
     } else {
-      urlStatusDiv.textContent = 'ココナラサービスページではありません';
-      urlStatusDiv.style.color = '#f44336';
+      showError('ココナラのサービスページを表示してください');
     }
   });
 
