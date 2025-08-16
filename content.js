@@ -5,101 +5,183 @@ console.log('Content script loaded on:', window.location.href);
 window.getOverviewText = async function() {
   try {
     const result = [];
+    const isEditPage = window.location.href.includes('/mypage/services/');
     
-    // タイトルを取得
-    const titleElement = document.querySelector('.c-overview_overview');
-    const overviewElement = document.querySelector('.c-overview_text');
-    
-    // タイトルを取得
-    if (titleElement) {
-      result.push({
-        title: 'サービスタイトル',
-        content: titleElement.textContent.trim(),
-        type: 'title'
-      });
-    } else {
-      console.log('No element with class .c-overview_overview found');
-      result.push({
-        title: 'サービスタイトル',
-        content: 'サービスタイトルは取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
-        type: 'error'
-      });
-    }
-    
-    // 概要テキストを取得
-    if (overviewElement) {
-      result.push({
-        title: 'タイトル補足説明',
-        content: overviewElement.textContent.trim(),
-        type: 'overview'
-      });
-    } else {
-      console.log('No element with class .c-overview_text found');
-      result.push({
-        title: 'タイトル補足説明',
-        content: 'タイトル補足説明は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
-        type: 'error'
-      });
-    }
-    
-    // コンテンツテキストを取得（複数ある可能性があるためquerySelectorAllを使用）
-    const contentElements = document.querySelectorAll('.c-contentsFreeText_text');
-    
-    if (contentElements.length > 0) {
-      // 複数の要素がある場合は、それぞれを個別のセクションとして追加
-      contentElements.forEach((element, index) => {
-        const content = element.textContent.trim();
-        if (content) {
-          // 最初の要素は「サービス内容」、2つ目は「購入にあたってのお願い」、他は番号付き
-          let title = 'サービス内容';
-          if (contentElements.length > 1) {
-            title = index === 0 ? 'サービス内容' : 
-                   index === 1 ? '購入にあたってのお願い' : 
-                   `サービス内容 ${index + 1}`;
+    if (isEditPage) {
+      // 編集ページ用のセレクタ
+      const titleElement = document.querySelector('#ServiceOverview');
+      const overviewElement = document.querySelector('#ServiceCatchphrase');
+      const serviceHeadElement = document.querySelector('#ServiceHead');
+      const serviceBodyElement = document.querySelector('#ServiceBody');
+      
+      // サービスタイトルを取得
+      if (titleElement) {
+        result.push({
+          title: 'サービスタイトル',
+          content: titleElement.value.trim() + 'ます',
+          type: 'title'
+        });
+      } else {
+        result.push({
+          title: 'サービスタイトル',
+          content: 'サービスタイトルは取得できませんでした。',
+          type: 'error'
+        });
+      }
+      
+      // タイトル補足説明を取得
+      if (overviewElement) {
+        result.push({
+          title: 'タイトル補足説明',
+          content: overviewElement.value.trim(),
+          type: 'overview'
+        });
+      } else {
+        result.push({
+          title: 'タイトル補足説明',
+          content: 'タイトル補足説明は取得できませんでした。',
+          type: 'error'
+        });
+      }
+      
+      // サービス内容を取得
+      if (serviceHeadElement) {
+        result.push({
+          title: 'サービス内容',
+          content: serviceHeadElement.value.trim(),
+          type: 'content'
+        });
+      } else {
+        result.push({
+          title: 'サービス内容',
+          content: 'サービス内容は取得できませんでした。',
+          type: 'error'
+        });
+      }
+      
+      // 購入にあたってのお願いを取得
+      if (serviceBodyElement) {
+        result.push({
+          title: '購入にあたってのお願い',
+          content: serviceBodyElement.value.trim(),
+          type: 'content'
+        });
+      }
+      
+      // オプションを取得
+      const optionElements = document.querySelectorAll('#optionArea textarea');
+      if (optionElements.length > 0) {
+        optionElements.forEach((element, index) => {
+          const content = element.value.trim();
+          if (content) {
+            const title = optionElements.length > 1
+              ? `オプション ${index + 1}`
+              : 'オプション';
+              
+            result.push({
+              title: title,
+              content: content,
+              type: 'option'
+            });
           }
-            
-          result.push({
-            title: title,
-            content: content,
-            type: 'content'
-          });
-        }
-      });
+        });
+      } else {
+        result.push({
+          title: 'オプション',
+          content: 'オプションはありません。',
+          type: 'info'
+        });
+      }
     } else {
-      console.warn('No elements with class .c-contentsFreeText_text found');
-      result.push({
-        title: 'サービス内容',
-        content: 'サービス内容は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
-        type: 'error'
-      });
-    }
-    
-    // オプションを取得
-    const optionElements = document.querySelectorAll('.c-serviceOptionItem_name');
-    
-    if (optionElements.length > 0) {
-      optionElements.forEach((element, index) => {
-        const content = element.textContent.trim();
-        if (content) {
-          const title = optionElements.length > 1
-            ? `オプション ${index + 1}`
-            : 'オプション';
-            
-          result.push({
-            title: title,
-            content: content,
-            type: 'option'
-          });
-        }
-      });
-    } else {
-      console.log('No elements with class .c-serviceOptionItem_name found');
-      // オプションは必須ではないので、エラーではなく情報として表示
-      result.push({
-        title: 'オプション',
-        content: 'オプションはありません。',
-        type: 'info'
-      });
+      // 通常の表示ページ用のセレクタ（既存のコード）
+      const titleElement = document.querySelector('.c-overview_overview');
+      const overviewElement = document.querySelector('.c-overview_text');
+      
+      // タイトルを取得
+      if (titleElement) {
+        result.push({
+          title: 'サービスタイトル',
+          content: titleElement.textContent.trim(),
+          type: 'title'
+        });
+      } else {
+        console.log('No element with class .c-overview_overview found');
+        result.push({
+          title: 'サービスタイトル',
+          content: 'サービスタイルは取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+          type: 'error'
+        });
+      }
+      
+      // 概要テキストを取得
+      if (overviewElement) {
+        result.push({
+          title: 'タイトル補足説明',
+          content: overviewElement.textContent.trim(),
+          type: 'overview'
+        });
+      } else {
+        console.log('No element with class .c-overview_text found');
+        result.push({
+          title: 'タイトル補足説明',
+          content: 'タイトル補足説明は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+          type: 'error'
+        });
+      }
+      
+      // コンテンツテキストを取得（複数ある可能性があるためquerySelectorAllを使用）
+      const contentElements = document.querySelectorAll('.c-contentsFreeText_text');
+      
+      if (contentElements.length > 0) {
+        contentElements.forEach((element, index) => {
+          const content = element.textContent.trim();
+          if (content) {
+            let title = index === 0 ? 'サービス内容' : 
+                       index === 1 ? '購入にあたってのお願い' : 
+                       `サービス内容 ${index + 1}`;
+                        
+            result.push({
+              title: title,
+              content: content,
+              type: 'content'
+            });
+          }
+        });
+      } else {
+        console.warn('No elements with class .c-contentsFreeText_text found');
+        result.push({
+          title: 'サービス内容',
+          content: 'サービス内容は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+          type: 'error'
+        });
+      }
+      
+      // オプションを取得
+      const optionElements = document.querySelectorAll('.c-serviceOptionItem_name');
+      
+      if (optionElements.length > 0) {
+        optionElements.forEach((element, index) => {
+          const content = element.textContent.trim();
+          if (content) {
+            const title = optionElements.length > 1
+              ? `オプション ${index + 1}`
+              : 'オプション';
+              
+            result.push({
+              title: title,
+              content: content,
+              type: 'option'
+            });
+          }
+        });
+      } else {
+        console.log('No elements with class .c-serviceOptionItem_name found');
+        result.push({
+          title: 'オプション',
+          content: 'オプションはありません。',
+          type: 'info'
+        });
+      }
     }
     
     // 結果が空の場合はメッセージを返す
@@ -124,8 +206,18 @@ window.getOverviewText = async function() {
     
     // APIにリクエストを送信
     try {
-      const apiUrl = `https://tiger4th.com/api/extension-coconala-prohibited-service/?content=${encodeURIComponent(combinedText)}`;
-      const response = await fetch(apiUrl);
+      const apiUrl = 'https://tiger4th.com/api/extension-coconala-prohibited-service/';
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: `content=${encodeURIComponent(combinedText)}`
+      });
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        throw new Error(`HTTP ${response.status} ${response.statusText} ${text ? '- ' + text : ''}`);
+      }
       const data = await response.json();
       
       if (data.status === 'success' && data.response) {

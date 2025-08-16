@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const url = tabs[0]?.url || '';
     console.log('Current URL:', url);
     
-    const isCoconalaService = url.startsWith('https://coconala.com/services/');
+    const isCoconalaService = url.startsWith('https://coconala.com/services/') || url.includes('coconala.com/mypage/services/');
     
     if (isCoconalaService) {
       // コンテンツスクリプトが読み込まれているか確認
