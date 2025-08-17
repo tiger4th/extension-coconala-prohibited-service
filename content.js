@@ -99,6 +99,29 @@ window.getOverviewText = async function() {
         });
       }
     } else {
+      // すべての「もっと見る」ボタン内のaタグをクリックして隠れた要素を表示
+      const clickReadMoreButtons = async () => {
+        const buttons = document.querySelectorAll('.c-contentsCollapse_readMore a');
+        for (const button of buttons) {
+          if (button.offsetParent !== null) { // 表示されているボタンのみ対象
+            const clickEvent = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true
+            });
+            button.dispatchEvent(clickEvent);
+            console.log('Clicked "もっと見る" link');
+          }
+        }
+      };
+      
+      // 同期処理を待機するために即時実行関数を使用
+      await (async () => {
+        await clickReadMoreButtons();
+        // コンテンツが展開されるのを待つ
+        await new Promise(resolve => setTimeout(resolve, 100));
+      })();
+      
       // 通常の表示ページ用のセレクタ（既存のコード）
       const titleElement = document.querySelector('.c-overview_overview');
       const overviewElement = document.querySelector('.c-overview_text');
