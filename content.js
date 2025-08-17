@@ -121,11 +121,34 @@ window.getOverviewText = async function() {
         // コンテンツが展開されるのを待つ
         await new Promise(resolve => setTimeout(resolve, 100));
       })();
+
+      // Q&Aセクションの「もっと見る」ボタンをクリック
+      const clickQuestionReadMore = async () => {
+        const readMoreButtons = document.querySelectorAll('.c-question_readMore');
+        for (const button of readMoreButtons) {
+          if (button.offsetParent !== null) { // 表示されているボタンのみ対象
+            const clickEvent = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true
+            });
+            button.dispatchEvent(clickEvent);
+            console.log('Clicked Q&A "もっと見る" link');
+          }
+        }
+      };
+
+      // 同期処理を待機
+      await (async () => {
+        await clickQuestionReadMore();
+        // コンテンツが展開されるのを待つ
+        await new Promise(resolve => setTimeout(resolve, 100));
+      })();
       
       // 通常の表示ページ用のセレクタ（既存のコード）
       const titleElement = document.querySelector('.c-overview_overview');
       const overviewElement = document.querySelector('.c-overview_text');
-      
+    
       // タイトルを取得
       if (titleElement) {
         result.push({
@@ -209,6 +232,35 @@ window.getOverviewText = async function() {
           title: 'オプション',
           content: 'オプションはありません。',
           type: 'info'
+        });
+      }
+
+      // Q&Aセクションを取得
+      const questionElements = document.querySelectorAll('.c-question');
+      if (questionElements.length > 0) {
+        questionElements.forEach((questionElement, index) => {
+          // .c-question_readMore 要素を除外して質問テキストを取得
+          const questionText = Array.from(questionElement.childNodes)
+            .filter(node => !(node.nodeType === Node.ELEMENT_NODE && node.classList.contains('c-question_readMore')))
+            .map(node => node.textContent)
+            .join('')
+            .trim();
+          
+          const answerElement = questionElement.nextElementSibling;
+          let answerText = '';
+          
+          // 次の要素がc-answerクラスを持っているか確認
+          if (answerElement && answerElement.classList.contains('c-answer')) {
+            answerText = answerElement.textContent.trim();
+          }
+          
+          if (questionText) {
+            result.push({
+              title: `Q${index + 1}: ${questionText}`,
+              content: answerText || '回答がありません',
+              type: 'qa'
+            });
+          }
         });
       }
     }
