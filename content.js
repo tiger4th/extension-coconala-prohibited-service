@@ -24,7 +24,7 @@ window.getOverviewText = async function() {
       } else {
         result.push({
           title: 'サービスタイトル',
-          content: 'サービスタイトルは取得できませんでした。',
+          content: 'サービスタイトルを取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
           type: 'error'
         });
       }
@@ -39,7 +39,7 @@ window.getOverviewText = async function() {
       } else {
         result.push({
           title: 'タイトル補足説明',
-          content: 'タイトル補足説明は取得できませんでした。',
+          content: 'タイトル補足説明を取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
           type: 'error'
         });
       }
@@ -54,7 +54,7 @@ window.getOverviewText = async function() {
       } else {
         result.push({
           title: 'サービス内容',
-          content: 'サービス内容は取得できませんでした。',
+          content: 'サービス内容を取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
           type: 'error'
         });
       }
@@ -65,6 +65,12 @@ window.getOverviewText = async function() {
           title: '購入にあたってのお願い',
           content: serviceBodyElement.value.trim(),
           type: 'content'
+        });
+      } else {
+        result.push({
+          title: '購入にあたってのお願い',
+          content: '購入にあたってのお願いを取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
+          type: 'error'
         });
       }
       
@@ -108,7 +114,7 @@ window.getOverviewText = async function() {
         console.log('No element with class .c-overview_overview found');
         result.push({
           title: 'サービスタイトル',
-          content: 'サービスタイルは取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+          content: 'サービスタイルを取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
           type: 'error'
         });
       }
@@ -124,7 +130,7 @@ window.getOverviewText = async function() {
         console.log('No element with class .c-overview_text found');
         result.push({
           title: 'タイトル補足説明',
-          content: 'タイトル補足説明は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+          content: 'タイトル補足説明を取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
           type: 'error'
         });
       }
@@ -151,7 +157,7 @@ window.getOverviewText = async function() {
         console.warn('No elements with class .c-contentsFreeText_text found');
         result.push({
           title: 'サービス内容',
-          content: 'サービス内容は取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者の<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>までご連絡ください。',
+          content: 'サービス内容を取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
           type: 'error'
         });
       }

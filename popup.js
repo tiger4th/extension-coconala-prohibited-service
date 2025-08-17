@@ -106,10 +106,10 @@ document.addEventListener('DOMContentLoaded', function() {
                   
                   // Check for AI judgment result and apply appropriate background color
                   if (item.title === 'AI判定結果' && item.content) {
-                    if (item.content.includes('禁止事項に該当する')) {
+                    if (item.content.includes('禁止事項に該当する\n')) {
                       section.style.backgroundColor = '#ffebee'; // Light red
                       section.style.borderLeft = '4px solid #f44336'; // Red border
-                    } else if (item.content.includes('禁止事項に該当しない')) {
+                    } else if (item.content.includes('禁止事項に該当しない\n')) {
                       section.style.backgroundColor = '#e3f2fd'; // Light blue
                       section.style.borderLeft = '4px solid #2196f3'; // Blue border
                     }

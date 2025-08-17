@@ -93,7 +93,6 @@ button:hover {
 .result-section[data-type="title"] {
   background-color: #fff8e1;
   border-left: 4px solid #ffc107;
-  font-weight: bold;
 }
 
 /* 概要セクションのスタイル */
