@@ -98,6 +98,39 @@ window.getOverviewText = async function() {
           type: 'info'
         });
       }
+
+      // Q&Aセクションを取得
+      const faqQuestions = [];
+      const faqAnswers = [];
+      
+      // すべてのテキストエリアを取得
+      const allTextareas = document.querySelectorAll('textarea[id^="Faq"][id$="Question"], textarea[id^="Faq"][id$="Answer"]');
+      
+      // 質問と回答を分類
+      allTextareas.forEach(textarea => {
+        const id = textarea.id;
+        const isQuestion = id.endsWith('Question');
+        const faqNumber = id.match(/Faq(\d*)/)[1] || ''; // 数字部分を取得（Faq1Question → 1, FaqQuestion → ''）
+        
+        if (isQuestion) {
+          faqQuestions[faqNumber] = textarea.value.trim();
+        } else {
+          faqAnswers[faqNumber] = textarea.value.trim();
+        }
+      });
+      
+      // Q&Aを結果に追加
+      Object.entries(faqQuestions).forEach(([number, question]) => {
+        if (question) {
+          const answer = faqAnswers[number] || '';
+          const qNumber = number ? parseInt(number) + 1 : 1; // 数値に変換して1ベースに
+          result.push({
+            title: `Q${qNumber}: ${question}`,
+            content: answer,
+            type: 'qa'
+          });
+        }
+      });
     } else {
       // すべての「もっと見る」ボタン内のaタグをクリックして隠れた要素を表示
       const clickReadMoreButtons = async () => {
@@ -257,7 +290,7 @@ window.getOverviewText = async function() {
           if (questionText) {
             result.push({
               title: `Q${index + 1}: ${questionText}`,
-              content: answerText || '回答がありません',
+              content: answerText || '',
               type: 'qa'
             });
           }

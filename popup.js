@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   
                   section.innerHTML = `
                     <h3>${item.title}</h3>
-                    <div class="result-content">${item.content || '内容がありません'}</div>
+                    <div class="result-content">${item.content || ''}</div>
                     ${item.title === 'AI判定結果' ? 
                       '<div style="margin-top: 10px; font-size: 12px; color: #666; padding: 8px; background-color: #f5f5f5; border-radius: 4px;">' +
                       'AIは間違えることがあります。結果は参考としてご利用ください。出品禁止サービスの詳細は' +
