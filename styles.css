@@ -90,34 +90,34 @@ button:hover {
 }
 
 /* タイトルセクションのスタイル */
-.result-section[data-type="title"] {
+/* .result-section[data-type="title"] {
   background-color: #fff8e1;
   border-left: 4px solid #ffc107;
-}
+} */
 
 /* 概要セクションのスタイル */
-.result-section[data-type="overview"] {
+/* .result-section[data-type="overview"] {
   background-color: #fff8e1;
   border-left: 4px solid #ffc107;
-}
+} */
 
 /* サービス内容セクションのスタイル */
-.result-section[data-type="content"] {
+/* .result-section[data-type="content"] {
   background-color: #e8f5e9;
   border-left: 4px solid #4caf50;
-}
+} */
 
 /* オプションセクションのスタイル */
-.result-section[data-type="option"] {
+/* .result-section[data-type="option"] {
   background-color: #e3f2fd;
   border-left: 4px solid #2196f3;
-}
+} */
 
 /* QAセクションのスタイル */
-.result-section[data-type="qa"] {
+/* .result-section[data-type="qa"] {
   background-color: #fff3e0;
   border-left: 4px solid #ff9800;
-}
+} */
 
 .result-section:last-child {
   margin-bottom: 0;
