@@ -307,7 +307,7 @@ window.getOverviewText = async function() {
     let combinedText = '';
     result.forEach(item => {
       if (item.content) {
-        combinedText += `${item.title}\n${item.content}\n\n`;
+        combinedText += `# ${item.title}\n${item.content}\n\n`;
       }
     });
     
