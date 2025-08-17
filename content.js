@@ -91,12 +91,6 @@ window.getOverviewText = async function() {
             });
           }
         });
-      } else {
-        result.push({
-          title: 'オプション',
-          content: 'オプションはありません。',
-          type: 'info'
-        });
       }
 
       // Q&Aセクションを取得
@@ -258,13 +252,6 @@ window.getOverviewText = async function() {
               type: 'option'
             });
           }
-        });
-      } else {
-        console.log('No elements with class .c-serviceOptionItem_name found');
-        result.push({
-          title: 'オプション',
-          content: 'オプションはありません。',
-          type: 'info'
         });
       }
 
