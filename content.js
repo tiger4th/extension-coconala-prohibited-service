@@ -356,7 +356,7 @@ window.getOverviewText = async function() {
       // console.error('API request failed:', error);
       result.unshift({
         title: 'AI判定エラー',
-        content: '判定中にエラーが発生しました。後でもう一度お試しください。アクセス集中の場合、しばらくご利用いただけない場合があります。',
+        content: '判定中にエラーが発生しました。後でもう一度お試しください。アクセス集中の場合、しばらくご利用いただけないことがあります。',
         type: 'error'
       });
     }

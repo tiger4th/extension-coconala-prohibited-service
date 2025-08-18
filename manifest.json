@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ココナラ出品チェッカー",
+  "name": "ココナラAI出品チェッカー",
   "version": "1.0",
-  "description": "ココナラの出品サービスの記載内容が、禁止事項に該当しないかチェックします。",
+  "description": "ココナラの出品サービスの記載内容が禁止事項に該当しないか、AIを使ってチェックします。",
   "permissions": ["activeTab", "scripting"],
   "host_permissions": [
     "https://coconala.com/*",
