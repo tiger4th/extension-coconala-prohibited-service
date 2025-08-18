@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   `;
                   resultsContainer.appendChild(section);
                   
-                  // 最後の要素以外に区切り線を追加
-                  if (index < response.result.length - 1) {
+                  // AI判定結果の後にのみ区切り線を追加
+                  if (item.title === 'AI判定結果' && index < response.result.length - 1) {
                     const separator = document.createElement('div');
                     separator.className = 'separator';
                     resultsContainer.appendChild(separator);
