@@ -126,19 +126,36 @@ window.getOverviewText = async function() {
         }
       });
     } else {
+      // ページが完全に読み込まれるまで待機する関数
+      const waitForPageLoad = () => {
+        return new Promise((resolve) => {
+          if (document.readyState === 'complete') {
+            resolve();
+          } else {
+            window.addEventListener('load', resolve, { once: true });
+          }
+        });
+      };
+
       // すべての「もっと見る」ボタン内のaタグをクリックして隠れた要素を表示
       const clickReadMoreButtons = async () => {
-        const buttons = document.querySelectorAll('.c-contentsCollapse_readMore a');
-        for (const button of buttons) {
-          if (button.offsetParent !== null) { // 表示されているボタンのみ対象
-            const clickEvent = new MouseEvent('click', {
-              view: window,
-              bubbles: true,
-              cancelable: true
-            });
-            button.dispatchEvent(clickEvent);
-            // console.log('Clicked "もっと見る" link');
+        try {
+          // ページが完全に読み込まれるまで待機
+          await waitForPageLoad();
+          
+          const buttons = document.querySelectorAll('.c-contentsCollapse_readMore a');
+          for (const button of buttons) {
+            if (button.offsetParent !== null) { // 表示されているボタンのみ対象
+              const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+              });
+              button.dispatchEvent(clickEvent);
+            }
           }
+        } catch (error) {
+          // console.error('Error in clickReadMoreButtons:', error);
         }
       };
       
@@ -151,17 +168,23 @@ window.getOverviewText = async function() {
 
       // Q&Aセクションの「もっと見る」ボタンをクリック
       const clickQuestionReadMore = async () => {
-        const readMoreButtons = document.querySelectorAll('.c-question_readMore');
-        for (const button of readMoreButtons) {
-          if (button.offsetParent !== null) { // 表示されているボタンのみ対象
-            const clickEvent = new MouseEvent('click', {
-              view: window,
-              bubbles: true,
-              cancelable: true
-            });
-            button.dispatchEvent(clickEvent);
-            // console.log('Clicked Q&A "もっと見る" link');
+        try {
+          // ページが完全に読み込まれるまで待機
+          await waitForPageLoad();
+          
+          const readMoreButtons = document.querySelectorAll('.c-question_readMore');
+          for (const button of readMoreButtons) {
+            if (button.offsetParent !== null) { // 表示されているボタンのみ対象
+              const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+              });
+              button.dispatchEvent(clickEvent);
+            }
           }
+        } catch (error) {
+          // console.error('Error in clickQuestionReadMore:', error);
         }
       };
 
