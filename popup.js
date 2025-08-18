@@ -16,35 +16,35 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check if current URL is a Coconala service page
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
-      console.error('No active tab found');
+      // console.error('No active tab found');
       showError('アクティブなタブが見つかりません');
       return;
     }
 
     const url = tabs[0]?.url || '';
-    console.log('Current URL:', url);
+    // console.log('Current URL:', url);
     
     const isCoconalaService = url.startsWith('https://coconala.com/services/') || url.includes('coconala.com/mypage/services/');
     
     if (isCoconalaService) {
       // コンテンツスクリプトが読み込まれているか確認
-      console.log('Injecting content script...');
+      // console.log('Injecting content script...');
       try {
         // まずcontent_scriptsが読み込まれているか確認するために、タブの状態を取得
         chrome.scripting.executeScript({
           target: {tabId: tabs[0].id},
           function: () => {
-            console.log('Content script check:', typeof getOverviewText);
+            // console.log('Content script check:', typeof getOverviewText);
             return typeof getOverviewText;
           }
         }, (results) => {
           if (chrome.runtime.lastError) {
-            console.error('Content script injection error:', chrome.runtime.lastError);
+            // console.error('Content script injection error:', chrome.runtime.lastError);
             showError(`コンテンツスクリプトの読み込みに失敗しました: ${chrome.runtime.lastError.message}\nページをリロードしてみてください。`);
             return;
           }
           
-          console.log('Content script check result:', results);
+          // console.log('Content script check result:', results);
           
           // 結果表示エリアをクリア
           const resultsContainer = document.getElementById('results');
@@ -64,12 +64,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const tab = tabs[0];
             
             if (!tab) {
-              console.error('No active tab found');
+              // console.error('No active tab found');
               displayError('アクティブなタブが見つかりません');
               return;
             }
             
-            console.log('Sending message to tab:', tab.id);
+            // console.log('Sending message to tab:', tab.id);
             
             // ポップアップが閉じられても処理を続行できるようにbackground.jsに処理を移譲
             chrome.runtime.sendMessage({
@@ -78,12 +78,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }, (response) => {
               // 接続エラーの場合
               if (chrome.runtime.lastError) {
-                console.error('メッセージ送信エラー:', chrome.runtime.lastError);
+                // console.error('メッセージ送信エラー:', chrome.runtime.lastError);
                 showError('データの取得中にエラーが発生しました。ページをリロードしてもう一度お試しください。');
                 return;
               }
               
-              console.log('コンテンツスクリプトからのレスポンス:', response);
+              // console.log('コンテンツスクリプトからのレスポンス:', response);
               
               // ローディング表示を削除
               const loadingElement = document.querySelector('.loading-container');
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         });
       } catch (error) {
-        console.error('Error in content script check:', error);
+        // console.error('Error in content script check:', error);
         displayError('エラーが発生しました: ' + error.message);
         showError(`エラーが発生しました: ${error.message}\nページをリロードしてみてください`);
       }

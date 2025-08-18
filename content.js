@@ -1,5 +1,5 @@
 // コンテンツスクリプトが読み込まれたことを確認
-console.log('Content script loaded on:', window.location.href);
+// console.log('Content script loaded on:', window.location.href);
 
 // グローバルに公開する関数
 window.getOverviewText = async function() {
@@ -137,7 +137,7 @@ window.getOverviewText = async function() {
               cancelable: true
             });
             button.dispatchEvent(clickEvent);
-            console.log('Clicked "もっと見る" link');
+            // console.log('Clicked "もっと見る" link');
           }
         }
       };
@@ -160,7 +160,7 @@ window.getOverviewText = async function() {
               cancelable: true
             });
             button.dispatchEvent(clickEvent);
-            console.log('Clicked Q&A "もっと見る" link');
+            // console.log('Clicked Q&A "もっと見る" link');
           }
         }
       };
@@ -184,7 +184,7 @@ window.getOverviewText = async function() {
           type: 'title'
         });
       } else {
-        console.log('No element with class .c-overview_overview found');
+        // console.log('No element with class .c-overview_overview found');
         result.push({
           title: 'サービスタイトル',
           content: 'サービスタイルを取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
@@ -200,7 +200,7 @@ window.getOverviewText = async function() {
           type: 'overview'
         });
       } else {
-        console.log('No element with class .c-overview_text found');
+        // console.log('No element with class .c-overview_text found');
         result.push({
           title: 'タイトル補足説明',
           content: 'タイトル補足説明を取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
@@ -227,7 +227,7 @@ window.getOverviewText = async function() {
           }
         });
       } else {
-        console.warn('No elements with class .c-contentsFreeText_text found');
+        // console.warn('No elements with class .c-contentsFreeText_text found');
         result.push({
           title: 'サービス内容',
           content: 'サービス内容を取得できませんでした。ページに存在するのに取得できない場合はココナラの仕様変更の可能性があります。作者に<a href="https://github.com/tiger4th/extension-coconala-prohibited-service" target="_blank" style="color: #0066cc; text-decoration: underline;">GitHub</a>または<a href="https://coconala.com/users/167331" target="_blank" style="color: #0066cc; text-decoration: underline;">ココナラ</a>でご連絡ください。',
@@ -330,7 +330,7 @@ window.getOverviewText = async function() {
         });
       }
     } catch (error) {
-      console.error('API request failed:', error);
+      // console.error('API request failed:', error);
       result.unshift({
         title: 'AI判定エラー',
         content: '判定中にエラーが発生しました。後でもう一度お試しください。アクセス集中の場合、しばらくご利用いただけない場合があります。',
@@ -340,23 +340,23 @@ window.getOverviewText = async function() {
     
     return result;
   } catch (error) {
-    console.error('Error in getOverviewText:', error);
+    // console.error('Error in getOverviewText:', error);
     return 'エラーが発生しました: ' + error.message;
   }
 }
 
 // メッセージリスナー
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('コンテンツスクリプトでメッセージを受信:', request);
+  // console.log('コンテンツスクリプトでメッセージを受信:', request);
 
   if (request.action === 'getOverview') {
-    console.log('getOverviewリクエストを受信');
+    // console.log('getOverviewリクエストを受信');
     
     // 非同期処理を実行
     (async () => {
       try {
         const result = await getOverviewText();
-        console.log('レスポンスを送信:', result);
+        // console.log('レスポンスを送信:', result);
         
         // 結果を返す（'すべてのテキスト'は除外）
         if (typeof sendResponse === 'function') {
@@ -375,7 +375,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           });
         }
       } catch (error) {
-        console.error('getOverviewでエラー:', error);
+        // console.error('getOverviewでエラー:', error);
         if (typeof sendResponse === 'function') {
           sendResponse({ 
             success: false, 
@@ -394,4 +394,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return false;
 });
 
-console.log('Content script initialization complete');
+// console.log('Content script initialization complete');
