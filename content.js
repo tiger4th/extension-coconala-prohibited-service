@@ -166,7 +166,7 @@ window.getOverviewText = async function() {
         await new Promise(resolve => setTimeout(resolve, 100));
       })();
 
-      // Q&Aセクションの「もっと見る」ボタンをクリック
+      // Q&Aセクションの「回答を見る」ボタンをクリック
       const clickQuestionReadMore = async () => {
         try {
           // ページが完全に読み込まれるまで待機
@@ -175,6 +175,13 @@ window.getOverviewText = async function() {
           const readMoreButtons = document.querySelectorAll('.c-question_readMore');
           for (const button of readMoreButtons) {
             if (button.offsetParent !== null) { // 表示されているボタンのみ対象
+              // 既に回答要素が存在する場合はクリックしない
+              const questionElement = button.closest('.c-question');
+              const nextElement = questionElement ? questionElement.nextElementSibling : null;
+              const hasAnswer = nextElement && nextElement.classList && nextElement.classList.contains('c-answer');
+              if (hasAnswer) {
+                continue;
+              }
               const clickEvent = new MouseEvent('click', {
                 view: window,
                 bubbles: true,
